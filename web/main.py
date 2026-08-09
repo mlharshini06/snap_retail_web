@@ -77,7 +77,19 @@ class ModelState:
 
 
 model_state = ModelState()
+def _ensure_models_loaded() -> None:
+    """Load YOLO models only when they are first needed."""
+    if model_state.ready:
+        return
 
+    with model_state.lock:
+        if model_state.ready:
+            return
+
+        logger.info("Loading YOLO models on first request...")
+        model_state.pose_detector = PoseDetector()
+        model_state.seg_detector = SegmentationDetector()
+        logger.info("Models loaded and ready.")
 app = FastAPI(title="Snap Retail Mirror", version="1.0.0")
 
 app.add_middleware(
@@ -89,12 +101,6 @@ app.add_middleware(
 )
 
 
-@app.on_event("startup")
-def load_models() -> None:
-    logger.info("Loading YOLO models (once, at startup)...")
-    model_state.pose_detector = PoseDetector()
-    model_state.seg_detector = SegmentationDetector()
-    logger.info("Models loaded. Ready to serve requests.")
 
 
 # ----------------------------------------------------------------------
@@ -143,8 +149,14 @@ async def analyze(file: UploadFile = File(...)) -> JSONResponse:
     type, skin tone, garment color. No AI call — used to give the
     shopper immediate visual feedback right after they capture a
     frame, before they tap "Get Recommendations"."""
-    if not model_state.ready:
-        return JSONResponse(status_code=503, content={"ok": False, "message": FRIENDLY_SERVER_ERROR})
+    try:
+        _ensure_models_loaded()
+    except Exception:
+        logger.exception("Model loading failed in /analyze")
+        return JSONResponse(
+            status_code=500,
+            content={"ok": False, "message": FRIENDLY_SERVER_ERROR},
+        )
 
     try:
         frame = await _read_frame(file)
@@ -190,8 +202,14 @@ async def analyze(file: UploadFile = File(...)) -> JSONResponse:
 async def recommend(file: UploadFile = File(...)) -> JSONResponse:
     """Full pipeline for a single captured frame: detect -> color ->
     OpenRouter styling recommendation. Stateless per request."""
-    if not model_state.ready:
-        return JSONResponse(status_code=503, content={"ok": False, "message": FRIENDLY_SERVER_ERROR})
+    try:
+        _ensure_models_loaded()
+    except Exception:
+        logger.exception("Model loading failed in /recommend")
+        return JSONResponse(
+            status_code=500,
+            content={"ok": False, "message": FRIENDLY_SERVER_ERROR},
+        )
 
     try:
         frame = await _read_frame(file)
