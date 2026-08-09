@@ -13,6 +13,9 @@ uvicorn[standard]>=0.30.0
 python-multipart>=0.0.9
 
 # --- Core vision / inference (same models as the desktop app) ---
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+
 ultralytics>=8.3.0
 opencv-python-headless>=4.10.0
 torch>=2.2.0
