@@ -1,0 +1,27 @@
+# Requirements for the WEB deployment of Snap Retail Mirror.
+#
+# This is a trimmed-down set: it keeps the exact same AI/vision stack
+# as requirements.txt (YOLO11 pose + seg, OpenCV, scikit-learn KMeans,
+# OpenRouter over requests) but drops the desktop-only extras that the
+# web prototype does not use (PostgreSQL, PDF, QR, Fal.ai virtual
+# try-on) and swaps opencv-python for the headless build since the
+# server never calls cv2.imshow.
+
+# --- Web server ---
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+
+# --- Core vision / inference (same models as the desktop app) ---
+ultralytics>=8.3.0
+opencv-python-headless>=4.10.0
+torch>=2.2.0
+torchvision>=0.17.0
+numpy>=1.26.0,<2.0.0
+scikit-learn>=1.4.0
+
+# --- OpenRouter AI recommendations ---
+requests>=2.31.0
+
+# --- Utilities ---
+python-dotenv>=1.0.1

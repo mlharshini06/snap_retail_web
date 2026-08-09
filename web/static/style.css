@@ -1,0 +1,404 @@
+/* ---------------------------------------------------------------
+   Snap Retail Mirror — design tokens
+   Subject: a boutique smart mirror. Warm brass frame + deep charcoal
+   glass, like standing in front of a fitting-room mirror at dusk.
+------------------------------------------------------------------ */
+:root {
+  --bg: #14120F;
+  --panel: #1C1A16;
+  --panel-raised: #232019;
+  --line: #35312A;
+
+  --ink: #F1EDE4;
+  --ink-muted: #A69E8D;
+  --ink-faint: #6F6A5D;
+
+  --brass: #C89B5C;
+  --brass-bright: #E0B579;
+  --brass-dim: #7A6440;
+
+  --ok: #8FAE8A;
+  --error: #C97558;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --radius-sm: 9px;
+
+  --shadow-soft: 0 20px 50px -20px rgba(0, 0, 0, 0.6);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(200, 155, 92, 0.10), transparent 60%);
+}
+
+button { font-family: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--brass-bright);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------
+   Shell
+------------------------------------------------------------------ */
+.app {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 28px 18px 48px;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 10px;
+}
+
+.app-header h1 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(28px, 5vw, 42px);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.subhead {
+  color: var(--ink-muted);
+  margin: 8px 0 0;
+  font-size: 15px;
+}
+
+.app-footer {
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 12.5px;
+  margin-top: 36px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+/* ---------------------------------------------------------------
+   Layout — mobile: stacked. desktop: two columns side by side.
+------------------------------------------------------------------ */
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .camera-panel { flex: 0 0 46%; position: sticky; top: 24px; }
+  .results-panel { flex: 1 1 54%; }
+}
+
+/* ---------------------------------------------------------------
+   Camera panel + the "mirror" signature element
+------------------------------------------------------------------ */
+.camera-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mirror-frame {
+  position: relative;
+  padding: 10px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(155deg, var(--brass-dim), #4a3c26 45%, var(--brass-dim));
+  box-shadow: var(--shadow-soft), inset 0 0 0 1px rgba(224, 181, 121, 0.25);
+}
+
+.mirror-glass {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: calc(var(--radius-lg) - 6px);
+  background: #0B0A08;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mirror-glass::after {
+  /* subtle glass sheen */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255,255,255,0.05) 0%, transparent 30%);
+  pointer-events: none;
+}
+
+#video, #capturedPreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* mirror-selfie framing */
+}
+
+.mirror-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink-faint);
+  text-align: center;
+  padding: 0 24px;
+}
+
+.mirror-placeholder p {
+  margin: 0;
+  font-size: 13.5px;
+}
+
+.live-dot {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: #E88;
+  background: rgba(0,0,0,0.45);
+  padding: 4px 9px;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+}
+
+/* ---------------------------------------------------------------
+   Controls
+------------------------------------------------------------------ */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s ease, opacity 0.12s ease, background 0.12s ease;
+  flex: 1 1 auto;
+  min-height: 50px; /* comfortable touch target */
+}
+
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--brass);
+  color: #1A1509;
+}
+.btn-primary:hover:not(:disabled) { background: var(--brass-bright); }
+
+.btn-accent {
+  background: var(--ink);
+  color: #1A1509;
+}
+.btn-accent:hover:not(:disabled) { background: #ffffff; }
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--ink-muted);
+}
+.btn-ghost:hover:not(:disabled) { border-color: var(--brass-dim); color: var(--ink); }
+
+.btn-block { width: 100%; flex: none; }
+
+/* ---------------------------------------------------------------
+   Status message (camera / detection errors)
+------------------------------------------------------------------ */
+.status-message {
+  background: rgba(201, 117, 88, 0.12);
+  border: 1px solid rgba(201, 117, 88, 0.35);
+  color: #E3A98F;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.status-message.info {
+  background: rgba(200, 155, 92, 0.10);
+  border-color: rgba(200, 155, 92, 0.3);
+  color: var(--brass-bright);
+}
+
+/* ---------------------------------------------------------------
+   Detection card
+------------------------------------------------------------------ */
+.detection-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.detection-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.detection-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 90px;
+}
+
+.detection-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+
+.detection-value {
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.swatch {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: 2px solid var(--line);
+  background: var(--panel-raised);
+}
+
+/* ---------------------------------------------------------------
+   Results panel
+------------------------------------------------------------------ */
+.results-panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  min-height: 320px;
+}
+
+.results-panel h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 22px;
+  margin: 0 0 16px;
+}
+
+.results-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-state, .loading-state, .error-state {
+  color: var(--ink-muted);
+  padding: 30px 6px;
+  text-align: center;
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  border: 3px solid var(--line);
+  border-top-color: var(--brass);
+  animation: spin 0.85s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-state p { color: #E3A98F; margin-bottom: 14px; }
+.error-state .btn { flex: none; }
+
+.rec-block { margin-bottom: 22px; }
+.rec-block:last-child { margin-bottom: 0; }
+
+.rec-block h3 {
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brass);
+  margin: 0 0 10px;
+}
+
+.pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pill-list li {
+  background: var(--panel-raised);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 13.5px;
+}
+
+.outfit-list, .tip-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.outfit-list li, .tip-list li {
+  background: var(--panel-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.tip-list li { border-left: 3px solid var(--brass-dim); }
+
+/* ---------------------------------------------------------------
+   Reduced motion
+------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .btn, .spinner { transition: none; animation: none; }
+}

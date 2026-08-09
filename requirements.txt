@@ -1,0 +1,21 @@
+# --- Core vision / inference ---
+ultralytics>=8.3.0        # YOLO11 pose + seg models
+opencv-python>=4.10.0
+torch>=2.2.0               # install the CUDA build separately if you have a GPU, see README
+torchvision>=0.17.0
+numpy>=1.26.0,<2.0.0
+scikit-learn>=1.4.0        # KMeans for skin-tone / garment color extraction
+
+# --- HTTP / async cloud APIs ---
+requests>=2.31.0
+
+# --- Database ---
+psycopg2-binary>=2.9.9
+
+# --- PDF / QR ---
+reportlab>=4.1.0
+qrcode[pil]>=7.4.2
+Pillow>=10.2.0
+
+# --- Utilities ---
+python-dotenv>=1.0.1

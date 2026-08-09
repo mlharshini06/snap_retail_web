@@ -1,0 +1,22 @@
+# Optional Render.com Blueprint. If you connect this repo on Render and
+# it detects this file, it will pre-fill a web service with these
+# settings — you still need to set OPENROUTER_API_KEY yourself
+# (marked sync: false so Render prompts for it instead of committing
+# a secret to the repo).
+services:
+  - type: web
+    name: snap-retail-mirror
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter          # see WEB_DEPLOYMENT.md for RAM/plan notes
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        value: qwen/qwen-2.5-72b-instruct
+      - key: MAX_IMAGE_SIDE
+        value: 960
+      - key: CORS_ORIGINS
+        value: "*"

@@ -1,0 +1,15 @@
+.venv/
+.env
+__pycache__/
+*.pyc
+logs/
+snapshots/
+database/
+ui/
+app.py
+requirements.txt
+README.md
+WEB_DEPLOYMENT.md
+.git/
+.gitignore
+*.md
